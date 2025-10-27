@@ -1,47 +1,119 @@
 <div align="center">
   <h2 align="center">Ecommerce Store</h2>
 
-  This is a fully responsive and functional ecommerce website, Responsive for all devices. <br/> Built using Next.js and TailwindCSS.
+This is a fully responsive and functional ecommerce website, Responsive for all devices. <br/> Built using Next.js and TailwindCSS.
 
-  <a href="https://ecommerce-w3b.vercel.app/"><strong>➥ Live Demo</strong></a>
+<a href="https://ecommerce-w3b.vercel.app/"><strong>➥ Live Demo</strong></a>
 
 </div>
 
 <br />
 
-### Demo Screeshots
+# Seventeen Visuals — Website
 
-![Micro Desktop Demo](./readme-images/readme-1.png "Desktop Demo")
-![Micro Desktop Demo](./readme-images/readme-2.png "Desktop Demo")
+This is the codebase for Seventeen Visuals — a Next.js + Tailwind website showcasing photography/video color-presets, booking, and portfolio pages.
+
+## Key features
+
+- Next.js 16 (Turbopack)
+- Tailwind CSS for styling
+- Presets gallery with static detail pages
+- Multi-step booking flow (client-side)
+- Reusable UI primitives and small design system under `components/ui`
+
+## Live demo
+
+If you've deployed this site, replace the link below with your production URL:
+
+[Live demo](#)
+
+## Screenshot
+
+![Site screenshot](./readme-images/readme-1.png)
+
+## Getting started
 
 ### Prerequisites
 
-Before you begin, ensure you have met the following requirements:
+- Node.js 18+ (use the version compatible with Next 16)
+- pnpm or npm (this project contains a pnpm lockfile but npm scripts work)
 
-* [Git](https://git-scm.com/downloads "Download Git") must be installed on your operating system.
-
-### Installing Ecomerce
-
-To install **E-commerce Store**, run this command on your git bash:
-
-Linux and macOS:
+### Install
 
 ```bash
-sudo git clone https://github.com/rolandaayo/ecommerce-store.git
+# from repository root
+npm install
+# or pnpm install
 ```
 
-Windows:
+### Run locally
 
 ```bash
-git clone https://github.com/rolandaayo/ecommerce-store.git
+npm run dev
+# open http://localhost:3000
 ```
 
-## 💬 Contact
+### Build for production
 
-If you have an offer, opportunity, or introduction that might make my life more interesting, email me at ibiwoyeroland@gmail.com.
+```bash
+npm run build
+npm run start
+```
 
-For the reasons stated above, I'll only respond to proposals that are matched for my schedule and interests.
+### Deploy
 
-### License
+This repo has been deployed with Firebase hosting in the past. A simple deploy using the Firebase CLI looks like:
 
-This project is **free to use** and does not contains any license.
+```bash
+firebase deploy
+```
+
+## Project structure (important parts)
+
+- `app/` — Next.js App Router routes and pages
+  - `app/presets` — presets index and detail pages (static pages like `cinematic-orange-teal` and `urban-night`)
+  - `app/book/page.tsx` — booking multi-step form
+- `components/` — site components and UI primitives
+  - `components/ui/` — form controls, modal, purchase form, etc.
+- `lib/presets-data.ts` — sample presets list and helper to look up presets
+- `public/` — static images used by the site
+
+## Presets pages
+
+Two static preset detail pages were added:
+
+- `/app/presets/cinematic-orange-teal/page.tsx`
+- `/app/presets/urban-night/page.tsx`
+
+These pages are static server-rendered pages with descriptions and usage tips. The main presets index (`/app/presets/page.tsx`) links to them.
+
+## Purchase flow & modals
+
+- There is a reusable `Modal` component at `components/ui/modal.tsx` and a `PurchaseForm` at `components/ui/purchase-form.tsx`.
+- I can wire the Buy Now buttons on the preset detail pages to open the purchase modal (ask me to do that and I will implement it).
+
+## Scripts
+
+- `npm run dev` — starts development server
+- `npm run build` — build for production
+- `npm run start` — run production server
+- `npm run lint` — run ESLint
+
+## Tips for contributors
+
+- Add new presets by creating a new folder under `app/presets/<slug>/page.tsx` and adding a preview image to `public/`.
+- Prefer small, focused UI components in `components/ui` so they can be reused across pages.
+
+## Status and TODO
+
+- Preset detail pages: implemented (static pages)
+- Purchase modal: present but not wired into every preset page (TODO)
+- Contact modal: not yet implemented (TODO)
+
+## License
+
+This project doesn't include a formal license. Add a license file if you plan to open-source it.
+
+## Contact
+
+Email: ibiwoyeroland@gmail.com
