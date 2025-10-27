@@ -3,31 +3,18 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import Image from "next/image";
-
-// Sample presets data - replace with real data
-const presets = [
-  {
-    id: 1,
-    name: "Cinematic Orange & Teal",
-    description:
-      "Perfect for moody, cinematic footage with warm highlights and cool shadows.",
-    price: "$49.99",
-    image: "/placeholder-preset.jpg", // Add a preset preview image
-    category: "Cinematic",
-  },
-  {
-    id: 2,
-    name: "Urban Night",
-    description:
-      "Enhance night city shots with balanced exposure and neon highlights.",
-    price: "$49.99",
-    image: "/placeholder-preset.jpg",
-    category: "Urban",
-  },
-  // Add more presets here
-];
+import Link from "next/link";
+import { useState } from "react";
+import { Modal } from "@/components/ui/modal";
+import { PurchaseForm } from "@/components/ui/purchase-form";
+import { presets } from "@/lib/presets-data";
 
 export default function PresetsPage() {
+  const [selectedPreset, setSelectedPreset] = useState<
+    (typeof presets)[0] | null
+  >(null);
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+
   return (
     <main className="min-h-screen bg-black">
       <Navigation />
@@ -54,31 +41,43 @@ export default function PresetsPage() {
                 key={preset.id}
                 className="bg-white/5 rounded-lg overflow-hidden hover:bg-white/10 transition-all group"
               >
-                {/* Preset Preview */}
-                <div className="relative aspect-video">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-                  <Image
-                    src={preset.image}
-                    alt={preset.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+                {/* Preset Preview - Links to detail page */}
+                <Link href={`/presets/${preset.id}`}>
+                  <div className="relative aspect-video">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                    <Image
+                      src={preset.image}
+                      alt={preset.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </Link>
 
                 {/* Preset Info */}
                 <div className="p-6">
                   <div className="text-xs font-medium text-white/40 uppercase tracking-wider mb-2">
                     {preset.category}
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    {preset.name}
-                  </h3>
+                  <Link href={`/presets/${preset.id}`}>
+                    <h3 className="text-xl font-bold text-white mb-2 hover:text-white/80">
+                      {preset.name}
+                    </h3>
+                  </Link>
                   <p className="text-white/70 text-sm mb-4">
                     {preset.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-white font-bold">{preset.price}</span>
-                    <button className="px-4 py-2 bg-white text-black text-sm font-bold rounded hover:bg-white/90 transition-all">
+                    <span className="text-white font-bold">
+                      ${preset.price}
+                    </span>
+                    <button
+                      onClick={() => {
+                        setSelectedPreset(preset);
+                        setShowPurchaseModal(true);
+                      }}
+                      className="px-4 py-2 bg-white text-black text-sm font-bold rounded hover:bg-white/90 transition-all"
+                    >
                       Buy Now
                     </button>
                   </div>
@@ -92,14 +91,33 @@ export default function PresetsPage() {
             <p className="text-white/60 mb-6">
               Need a custom preset? Contact us to discuss your specific needs.
             </p>
-            <button className="px-8 py-3 bg-white text-black font-bold rounded-lg hover:bg-white/90 transition-all">
+            <Link
+              href="/contact"
+              className="px-8 py-3 bg-white text-black font-bold rounded-lg hover:bg-white/90 transition-all inline-block"
+            >
               Get in Touch
-            </button>
+            </Link>
           </div>
         </div>
       </div>
 
       <Footer />
+
+      {selectedPreset && (
+        <Modal
+          isOpen={showPurchaseModal}
+          onClose={() => {
+            setShowPurchaseModal(false);
+            setSelectedPreset(null);
+          }}
+          title="Purchase Preset"
+        >
+          <PurchaseForm
+            presetName={selectedPreset.name}
+            price={selectedPreset.price}
+          />
+        </Modal>
+      )}
     </main>
   );
 }

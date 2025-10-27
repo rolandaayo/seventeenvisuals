@@ -90,6 +90,7 @@ export default function FeaturedWorks() {
           >
             View All Projects
           </Link>
+          
         </div>
       </div>
     </section>
