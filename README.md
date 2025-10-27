@@ -1,5 +1,5 @@
 
-# Seventeen Visuals — Website
+# SEVENTEENVISUALS — Website
 
 This is the codebase for Seventeen Visuals — a Next.js + Tailwind website showcasing photography/video color-presets, booking, and portfolio pages.
 
