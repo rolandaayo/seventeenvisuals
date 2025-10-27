@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import Navigation from "@/components/navigation"
-import Footer from "@/components/footer"
-import { Mail, Phone, MapPin } from "lucide-react"
-import { useState } from "react"
+import Navigation from "@/components/navigation";
+import Footer from "@/components/footer";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { useState } from "react";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -14,30 +14,39 @@ export default function ContactPage() {
     phone: "",
     subject: "",
     message: "",
-  })
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Handle form submission here
-    console.log("Form submitted:", formData)
-    setFormData({ name: "", email: "", phone: "", subject: "", message: "" })
-  }
+    console.log("Form submitted:", formData);
+    setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+  };
 
   return (
     <main className="min-h-screen bg-black">
       <Navigation />
-      <div className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+      <div className="pt-20 md:pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-white/60 font-bold text-sm tracking-widest uppercase">Get In Touch</span>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mt-4 mb-4">Contact Us</h1>
+          <div className="text-center mb-12 md:mb-16">
+            <span className="text-white/60 font-bold text-sm tracking-widest uppercase">
+              Get In Touch
+            </span>
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mt-4 mb-4">
+              Contact Us
+            </h1>
             <p className="text-white/70 text-lg max-w-2xl mx-auto">
-              Have a project in mind? Let's talk about how we can help bring your vision to life.
+              Have a project in mind? Let's talk about how we can help bring
+              your vision to life.
             </p>
           </div>
 
@@ -65,7 +74,10 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">Phone</h3>
-                  <a href="tel:+1234567890" className="text-white/70 hover:text-white transition-colors">
+                  <a
+                    href="tel:+1234567890"
+                    className="text-white/70 hover:text-white transition-colors"
+                  >
                     +234 812 244 7364
                   </a>
                 </div>
@@ -164,5 +176,5 @@ export default function ContactPage() {
       </div>
       <Footer />
     </main>
-  )
+  );
 }

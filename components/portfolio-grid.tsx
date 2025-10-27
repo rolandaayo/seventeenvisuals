@@ -6,8 +6,8 @@ export default function PortfolioGrid() {
   const [selectedCategory, setSelectedCategory] = useState("all")
 
   const projects = [
-    { id: 1, title: "Project 1", category: "commercial", description: "Add your video here", media: "/dls.MP4" },
-    { id: 2, title: "Project 2", category: "bts", description: "Add your video here", media:"/stills.mp4" },
+    { id: 1, title: "Project 1", category: "commercial", description: "", media: "/dls.MP4" },
+    { id: 2, title: "Project 2", category: "editorial", description: "", media:"/stills.mp4" },
     // { id: 3, title: "Project 3", category: "music", description: "Add your video here" },
     // { id: 4, title: "Project 4", category: "documentary", description: "Add your video here" },
     // { id: 5, title: "Project 5", category: "commercial", description: "Add your video here" },
