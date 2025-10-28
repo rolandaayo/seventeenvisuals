@@ -19,9 +19,9 @@ type FormState = {
 };
 
 function apiBase() {
-  if (typeof window === "undefined") return "";
+  if (typeof window === "undefined") return "https://svntn-api.vercel.app";
   if (window.location.hostname === "localhost") return "http://localhost:4000";
-  return ""; // assume same origin in production or proxy
+  return "https://svntn-api.vercel.app"; // production API
 }
 
 function formatPrice(price: number): string {
