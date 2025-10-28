@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 // the imports from `next/font/google` or use local font files and @font-face.
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { Toaster } from "../components/ui/toaster";
 
 // Note: font variables are intentionally omitted so the app uses the
 // project's Tailwind/system font stack defined in `globals.css` / tailwind
@@ -27,6 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans antialiased`}>
         {children}
+        <Toaster />
         <Analytics />
       </body>
     </html>

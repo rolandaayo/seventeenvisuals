@@ -45,10 +45,10 @@ export default function Hero() {
               View Work
             </Link>
             <Link
-              href="/contact"
+              href="/book"
               className="px-5 py-2 border-2 border-white text-white font-bold hover:bg-white/10 transition-all duration-300 text-sm sm:text-base"
             >
-              Get in Touch
+              Book Now!
             </Link>
           </div>
         </div>
