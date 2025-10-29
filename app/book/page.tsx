@@ -56,11 +56,20 @@ export default function BookPage() {
   });
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
+  // Helper function to get display name for categories
+  const getCategoryDisplayName = (category: string) => {
+    const categoryNames: Record<string, string> = {
+      commercials: "Commercials - Brands",
+      music_videos: "Music Videos",
+      bts_documentary: "Behind The Scenes",
+    };
+    return categoryNames[category] || category;
+  };
+
   const priceMap: Record<string, number> = {
     commercials: 350000,
     music_videos: 450000,
     bts_documentary: 150000,
-    corporate_videos: 250000,
   };
 
   const checkBooking = async () => {
@@ -273,7 +282,7 @@ export default function BookPage() {
                         Category
                       </dt>
                       <dd className="mt-1 text-sm font-medium capitalize">
-                        {foundBooking.category.replace("_", " ")}
+                        {getCategoryDisplayName(foundBooking.category)}
                       </dd>
                       {priceMap[foundBooking.category] && (
                         <dd className="text-sm text-black/70">
@@ -402,10 +411,9 @@ export default function BookPage() {
                   className="w-full rounded border px-3 py-2 outline-none bg-white"
                 >
                   <option value="">Choose a category</option>
-                  <option value="commercials">Commercials</option>
-                  <option value="music_videos">Music videos</option>
-                  <option value="bts_documentary">BTS / Documentary</option>
-                  <option value="corporate_videos">Corporate videos</option>
+                  <option value="commercials">Commercials - Brands</option>
+                  <option value="music_videos">Music Videos</option>
+                  <option value="bts_documentary">Behind The Scenes</option>
                 </select>
                 {selectedCategory && (
                   <div className="mt-2 text-sm text-gray-600">
