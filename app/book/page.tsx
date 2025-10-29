@@ -66,6 +66,26 @@ export default function BookPage() {
     return categoryNames[category] || category;
   };
 
+  // Reset all form states for a fresh booking
+  const resetBookingForm = () => {
+    setShowForm(true);
+    setSubmitted(false);
+    setShowSuccessModal(false);
+    setFoundBooking(null);
+    setBookingError(null);
+    setStep(0);
+    setSelectedCategory("");
+    setForm({
+      name: "",
+      datetime: "",
+      minutes: 60,
+      outfits: 1,
+      email: "",
+      phone: "",
+      notes: "",
+    });
+  };
+
   const priceMap: Record<string, number> = {
     commercials: 350000,
     music_videos: 450000,
@@ -211,7 +231,7 @@ export default function BookPage() {
                   onClick={() => {
                     setBookingNowLoading(true);
                     setTimeout(() => {
-                      setShowForm(true);
+                      resetBookingForm();
                       setBookingNowLoading(false);
                     }, 800);
                   }}
@@ -374,10 +394,10 @@ export default function BookPage() {
                   Check Another Booking
                 </button>
                 <button
-                  onClick={() => setShowForm(true)}
+                  onClick={resetBookingForm}
                   className="px-4 py-2 rounded bg-accent text-black text-sm font-medium"
                 >
-                  Book New Session
+                  Create New Booking
                 </button>
               </div>
             </div>
@@ -626,7 +646,7 @@ export default function BookPage() {
             </form>
           )}
 
-          {submitted && (
+          {submitted && !foundBooking && (
             <div className="mt-8 bg-black/5 p-6 rounded-lg text-center">
               <h2 className="text-2xl font-bold">Thanks — request sent!</h2>
               <p className="mt-2 text-black/60">
@@ -646,7 +666,12 @@ export default function BookPage() {
           {/* Success modal */}
           <Modal
             isOpen={showSuccessModal}
-            onClose={() => setShowSuccessModal(false)}
+            onClose={() => {
+              setShowSuccessModal(false);
+              setShowForm(false);
+              setSubmitted(false);
+              // Keep foundBooking visible
+            }}
             title="Booking confirmed"
           >
             <div className="flex flex-col items-center gap-4">
@@ -672,6 +697,10 @@ export default function BookPage() {
                     setTimeout(() => {
                       setShowSuccessModal(false);
                       setModalClosing(false);
+                      // Keep booking details visible, just close modal
+                      setShowForm(false);
+                      setSubmitted(false);
+                      // foundBooking stays visible
                     }, 600);
                   }}
                   disabled={modalClosing}
