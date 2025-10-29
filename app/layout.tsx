@@ -13,10 +13,10 @@ import { Toaster } from "../components/ui/toaster";
 // config. This avoids remote network requests during `next build`.
 
 export const metadata: Metadata = {
-  title: "Seventeen Visuals - Film & Videography",
+  title: "SEVENTEENVISUALS - Film & Videography",
   description:
     "Professional film, BTS, and videography services. Cinematic storytelling for brands and creators.",
-  generator: "v0.app",
+  generator: "",
 };
 
 export default function RootLayout({

@@ -215,7 +215,7 @@ export default function BookPage() {
                       Loading form...
                     </span>
                   ) : (
-                    "Book Now!"
+                    "Create New Booking!"
                   )}
                 </button>
 
@@ -649,7 +649,7 @@ export default function BookPage() {
                 Booking successful
               </h3>
               <p className="text-sm text-gray-700">
-                Thanks — your booking request was received.
+                Thanks! your booking request was received.
               </p>
               <div className="text-sm mt-2">
                 <div className="text-gray-600">Booking ID</div>
