@@ -29,14 +29,14 @@ export default function CinematicPresetPage() {
 
           <div>
             <h1 className="text-4xl font-bold">Cinematic Orange & Teal</h1>
-            <p className="mt-4 text-white/75">
+            <p className="mt-4 text-gray-700">
               Perfect for moody, cinematic footage — boosts warm highlights
               while retaining cool, teal shadows for that classic film look.
             </p>
 
             <div className="mt-6">
-              <h3 className="font-semibold">What it does</h3>
-              <ul className="list-disc list-inside mt-2 text-white/80 space-y-1">
+              <h3 className="font-semibold text-gray-900">What it does</h3>
+              <ul className="list-disc list-inside mt-2 text-gray-700 space-y-1">
                 <li>
                   Enhances warm tones in highlights for golden skin and
                   sunlight.
@@ -52,8 +52,8 @@ export default function CinematicPresetPage() {
             </div>
 
             <div className="mt-6">
-              <h3 className="font-semibold">How to use</h3>
-              <ol className="list-decimal list-inside mt-2 text-white/80 space-y-2">
+              <h3 className="font-semibold text-gray-900">How to use</h3>
+              <ol className="list-decimal list-inside mt-2 text-gray-700 space-y-2">
                 <li>
                   Apply the preset to a neutral-exposed clip shot in golden hour
                   or controlled lighting.
@@ -86,7 +86,7 @@ export default function CinematicPresetPage() {
               </Link>
               <a
                 href="/contact"
-                className="px-5 py-3 border border-white/20 rounded"
+                className="px-5 py-3 border border-gray-300 text-gray-700 rounded hover:bg-gray-50"
               >
                 Need help? Contact
               </a>

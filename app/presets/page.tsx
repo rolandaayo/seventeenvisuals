@@ -69,7 +69,7 @@ export default function PresetsPage() {
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-white font-bold">
-                      ${preset.price}
+                      ₦{preset.price.toLocaleString()}
                     </span>
                     <button
                       onClick={() => {

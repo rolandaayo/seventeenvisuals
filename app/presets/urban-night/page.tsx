@@ -29,14 +29,14 @@ export default function UrbanNightPresetPage() {
 
           <div>
             <h1 className="text-4xl font-bold">Urban Night</h1>
-            <p className="mt-4 text-white/75">
+            <p className="mt-4 text-gray-700">
               Tailored for low-light cityscapes — preserves highlights from neon
               signs and balances shadows for clean detail in dark areas.
             </p>
 
             <div className="mt-6">
-              <h3 className="font-semibold">What it does</h3>
-              <ul className="list-disc list-inside mt-2 text-white/80 space-y-1">
+              <h3 className="font-semibold text-gray-900">What it does</h3>
+              <ul className="list-disc list-inside mt-2 text-gray-700 space-y-1">
                 <li>
                   Controls highlight clipping for bright neon and street lamps.
                 </li>
@@ -55,8 +55,8 @@ export default function UrbanNightPresetPage() {
             </div>
 
             <div className="mt-6">
-              <h3 className="font-semibold">How to use</h3>
-              <ol className="list-decimal list-inside mt-2 text-white/80 space-y-2">
+              <h3 className="font-semibold text-gray-900">How to use</h3>
+              <ol className="list-decimal list-inside mt-2 text-gray-700 space-y-2">
                 <li>
                   Shoot with native ISO if possible and avoid heavy
                   underexposure.
@@ -85,7 +85,7 @@ export default function UrbanNightPresetPage() {
               </Link>
               <a
                 href="/contact"
-                className="px-5 py-3 border border-white/20 rounded"
+                className="px-5 py-3 border border-gray-300 text-gray-700 rounded hover:bg-gray-50"
               >
                 Need help? Contact
               </a>

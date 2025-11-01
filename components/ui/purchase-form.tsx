@@ -58,7 +58,9 @@ export function PurchaseForm({
       </div>
       <div className="pt-2">
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Processing..." : `Purchase for $${price}`}
+          {loading
+            ? "Processing..."
+            : `Purchase for ₦${price.toLocaleString()}`}
         </Button>
       </div>
     </form>

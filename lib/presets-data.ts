@@ -5,7 +5,7 @@ export const presets = [
     name: "Cinematic Orange & Teal",
     description:
       "Perfect for moody, cinematic footage with warm highlights and cool shadows.",
-    price: 49.99,
+    price: 35000,
     image: "/preset-1.png",
     category: "Cinematic",
     features: [
@@ -20,7 +20,7 @@ export const presets = [
     name: "Urban Night",
     description:
       "Enhance night city shots with balanced exposure and neon highlights.",
-    price: 49.99,
+    price: 35000,
     image: "/preset-2.png",
     category: "Urban",
     features: [
