@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import Link from "next/link"
+import Link from "next/link";
 
 export default function FeaturedWorks() {
   const works = [
@@ -26,14 +26,18 @@ export default function FeaturedWorks() {
     //   title: "Documentary",
     //   category: "Documentary",
     // },
-  ]
+  ];
 
   return (
     <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="mb-20">
-          <p className="text-accent font-bold text-sm uppercase tracking-widest mb-4">Featured Works</p>
-          <h2 className="text-5xl md:text-6xl font-black text-black mb-6">Our Latest Projects</h2>
+          <p className="text-black font-bold text-sm uppercase tracking-widest mb-4">
+            Featured Works
+          </p>
+          <h2 className="text-5xl md:text-6xl font-black text-black mb-6">
+            Our Latest Projects
+          </h2>
           <div className="w-12 h-1 bg-black" />
         </div>
 
@@ -53,7 +57,7 @@ export default function FeaturedWorks() {
                   className="absolute inset-0 w-full h-full object-cover"
                 />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-black to-black/80">
+                <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-black to-black/80">
                   <div className="text-center space-y-4">
                     <div className="w-16 h-16 mx-auto border-2 border-white/30 flex items-center justify-center group-hover:border-accent transition-colors">
                       <svg
@@ -65,8 +69,12 @@ export default function FeaturedWorks() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-white font-bold text-lg">{work.title}</p>
-                      <p className="text-accent text-sm uppercase tracking-wide">{work.category}</p>
+                      <p className="text-white font-bold text-lg">
+                        {work.title}
+                      </p>
+                      <p className="text-accent text-sm uppercase tracking-wide">
+                        {work.category}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -76,7 +84,9 @@ export default function FeaturedWorks() {
               <div className="absolute inset-0 flex items-end p-6 z-10 pointer-events-none">
                 <div className="bg-black/40 backdrop-blur-sm rounded-md px-4 py-2">
                   <p className="text-white font-bold text-lg">{work.title}</p>
-                  <p className="text-accent text-sm uppercase tracking-wide">{work.category}</p>
+                  <p className="text-accent text-sm uppercase tracking-wide">
+                    {work.category}
+                  </p>
                 </div>
               </div>
             </div>
@@ -90,9 +100,8 @@ export default function FeaturedWorks() {
           >
             View All Projects
           </Link>
-          
         </div>
       </div>
     </section>
-  )
+  );
 }
