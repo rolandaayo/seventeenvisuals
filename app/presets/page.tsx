@@ -44,7 +44,7 @@ export default function PresetsPage() {
                 {/* Preset Preview - Links to detail page */}
                 <Link href={`/presets/${preset.id}`}>
                   <div className="relative aspect-video">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent z-10" />
                     <Image
                       src={preset.image}
                       alt={preset.name}
