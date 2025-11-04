@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Toaster } from "../components/ui/toaster";
+import RotatingCTA from "../components/rotating-cta";
 
 // Note: font variables are intentionally omitted so the app uses the
 // project's Tailwind/system font stack defined in `globals.css` / tailwind
@@ -28,6 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans antialiased`}>
         {children}
+        <RotatingCTA />
         <Toaster />
         <Analytics />
       </body>
