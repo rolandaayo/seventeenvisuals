@@ -60,10 +60,10 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-white mb-1">Email</h3>
                   <a
-                    href="mailto:hello@seventeenvisuals.com"
+                    href="mailto:seventeenvisualss@gmail.com"
                     className="text-white/70 hover:text-white transition-colors"
                   >
-                    hello@seventeenvisuals.com
+                    seventeenvisualss@gmail.com
                   </a>
                 </div>
               </div>
