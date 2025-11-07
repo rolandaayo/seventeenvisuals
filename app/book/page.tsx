@@ -139,9 +139,16 @@ export default function BookPage() {
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
+
+    if (!selectedCategory) {
+      setBookingError("Please select a category");
+      return;
+    }
+
     setSubmitting(true);
+
     try {
-      // create booking on server
+      // First create the booking
       const payload = {
         name: form.name,
         email: form.email,
@@ -152,29 +159,81 @@ export default function BookPage() {
         notes: form.notes,
         category: selectedCategory,
       };
+
       const res = await fetch(`${apiBase()}/api/bookings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+
       if (!res.ok) throw new Error("create failed");
       const data = await res.json();
-      // show success and the generated bookingId (open modal)
-      setSubmitted(true);
-      setFoundBooking(data);
-      setShowSuccessModal(true);
-      try {
-        toast({
-          title: "Booking received",
-          description: `ID: ${data.bookingId}`,
-        });
-      } catch (e) {
-        // swallow if toast system not available
-      }
+
+      // Now initialize payment
+      const amount = priceMap[selectedCategory];
+      const paymentRes = await fetch(
+        `${apiBase()}/api/payments/initialize-booking`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bookingId: data.bookingId,
+            email: form.email,
+            amount,
+          }),
+        }
+      );
+
+      if (!paymentRes.ok) throw new Error("Payment initialization failed");
+      const paymentData = await paymentRes.json();
+
+      // Open Paystack payment popup
+      const popup = window.open(
+        paymentData.authorization_url,
+        "Paystack Payment",
+        "width=600,height=700"
+      );
+
+      // Poll for popup close
+      const pollTimer = setInterval(async () => {
+        if (popup?.closed) {
+          clearInterval(pollTimer);
+
+          // Verify payment
+          const verifyRes = await fetch(
+            `${apiBase()}/api/payments/verify/${paymentData.reference}`
+          );
+
+          if (verifyRes.ok) {
+            const verifyData = await verifyRes.json();
+
+            if (verifyData.success) {
+              setSubmitted(true);
+              setFoundBooking(data);
+              setShowSuccessModal(true);
+
+              try {
+                toast({
+                  title: "Booking confirmed & Payment received",
+                  description: `ID: ${data.bookingId}`,
+                });
+              } catch (e) {
+                // swallow if toast system not available
+              }
+            } else {
+              setBookingError(
+                "Payment verification failed. Please contact support with booking ID: " +
+                  data.bookingId
+              );
+            }
+          }
+
+          setSubmitting(false);
+        }
+      }, 1000);
     } catch (err) {
       console.error(err);
-      setBookingError("Failed to create booking — please try again.");
-    } finally {
+      setBookingError("Failed to process booking — please try again.");
       setSubmitting(false);
     }
   };

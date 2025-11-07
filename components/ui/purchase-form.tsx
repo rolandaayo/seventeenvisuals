@@ -5,6 +5,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 import { useState } from "react";
 import { toast } from "sonner";
+import { usePaystack } from "@/hooks/usePaystack";
 
 export function PurchaseForm({
   presetName,
@@ -13,38 +14,50 @@ export function PurchaseForm({
   presetName: string;
   price: number;
 }) {
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const { loading, error, initializePayment } = usePaystack();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
 
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      presetName,
-      price,
-    };
-
-    try {
-      // TODO: Implement actual purchase logic
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate API call
-      toast.success(
-        "Purchase successful! Check your email for download instructions."
-      );
-      setLoading(false);
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-      setLoading(false);
+    if (!email || !name) {
+      toast.error("Please fill in all fields");
+      return;
     }
+
+    await initializePayment(
+      "initialize-preset",
+      {
+        email,
+        presetName,
+        price,
+      },
+      (reference) => {
+        toast.success(
+          "Payment successful! Check your email for download instructions."
+        );
+      },
+      () => {
+        if (error) {
+          toast.error(error);
+        }
+      }
+    );
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="name">Name</Label>
-        <Input id="name" name="name" placeholder="Enter your name" required />
+        <Input
+          id="name"
+          name="name"
+          placeholder="Enter your name"
+          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
       </div>
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
@@ -54,13 +67,13 @@ export function PurchaseForm({
           type="email"
           placeholder="Enter your email"
           required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
       <div className="pt-2">
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading
-            ? "Processing..."
-            : `Purchase for ₦${price.toLocaleString()}`}
+          {loading ? "Processing payment..." : `Pay ₦${price.toLocaleString()}`}
         </Button>
       </div>
     </form>
