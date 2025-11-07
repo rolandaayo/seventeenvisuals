@@ -14,6 +14,13 @@ export default function PresetsPage() {
     (typeof presets)[0] | null
   >(null);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [loadingPresetId, setLoadingPresetId] = useState<string | null>(null);
+
+  const handlePurchaseSuccess = () => {
+    setShowPurchaseModal(false);
+    setShowSuccessModal(true);
+  };
 
   return (
     <main className="min-h-screen bg-black">
@@ -73,12 +80,24 @@ export default function PresetsPage() {
                     </span>
                     <button
                       onClick={() => {
-                        setSelectedPreset(preset);
-                        setShowPurchaseModal(true);
+                        setLoadingPresetId(preset.id);
+                        setTimeout(() => {
+                          setSelectedPreset(preset);
+                          setShowPurchaseModal(true);
+                          setLoadingPresetId(null);
+                        }, 600);
                       }}
-                      className="px-4 py-2 bg-white text-black text-sm font-bold rounded hover:bg-white/90 transition-all"
+                      disabled={loadingPresetId === preset.id}
+                      className="px-4 py-2 bg-white text-black text-sm font-bold rounded hover:bg-white/90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                      Buy Now
+                      {loadingPresetId === preset.id ? (
+                        <span className="flex items-center gap-2">
+                          <div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
+                          Loading...
+                        </span>
+                      ) : (
+                        "Buy Now"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -115,9 +134,60 @@ export default function PresetsPage() {
           <PurchaseForm
             presetName={selectedPreset.name}
             price={selectedPreset.price}
+            onSuccess={handlePurchaseSuccess}
           />
         </Modal>
       )}
+
+      {/* Success Modal */}
+      <Modal
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          setSelectedPreset(null);
+        }}
+        title="Purchase Successful! 🎉"
+      >
+        <div className="text-center space-y-4">
+          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+            <svg
+              className="w-10 h-10 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">
+            Payment Successful!
+          </h3>
+          <p className="text-gray-600">
+            Thank you for your purchase! An email has been sent to you with the
+            download link for your preset.
+          </p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p className="text-sm text-blue-800">
+              📧 Check your inbox for the download link and installation
+              instructions.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              setShowSuccessModal(false);
+              setSelectedPreset(null);
+            }}
+            className="w-full px-6 py-3 bg-black text-white rounded-lg hover:bg-black/90 transition-all font-semibold"
+          >
+            Close
+          </button>
+        </div>
+      </Modal>
     </main>
   );
 }

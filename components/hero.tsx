@@ -1,8 +1,29 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
+  const router = useRouter();
+  const [portfolioLoading, setPortfolioLoading] = useState(false);
+  const [bookLoading, setBookLoading] = useState(false);
+
+  const handlePortfolioClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setPortfolioLoading(true);
+    setTimeout(() => {
+      router.push("/portfolio");
+    }, 800);
+  };
+
+  const handleBookClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setBookLoading(true);
+    setTimeout(() => {
+      router.push("/book");
+    }, 800);
+  };
+
   return (
     <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
@@ -38,18 +59,34 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center pt-6">
-            <Link
-              href="/portfolio"
-              className="px-5 py-2 bg-white text-black font-bold hover:bg-white/90 transition-all duration-300 text-sm sm:text-base animate-bounce"
+            <button
+              onClick={handlePortfolioClick}
+              disabled={portfolioLoading}
+              className="px-5 py-2 bg-white text-black font-bold hover:bg-white/90 transition-all duration-300 text-sm sm:text-base animate-bounce disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              View Work
-            </Link>
-            <Link
-              href="/book"
-              className="px-5 py-2 border-2 border-white text-white font-bold hover:bg-white/10 transition-all duration-300 text-sm sm:text-base"
+              {portfolioLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
+                  Loading...
+                </span>
+              ) : (
+                "View Work"
+              )}
+            </button>
+            <button
+              onClick={handleBookClick}
+              disabled={bookLoading}
+              className="px-5 py-2 border-2 border-white text-white font-bold hover:bg-white/10 transition-all duration-300 text-sm sm:text-base disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Book Now!
-            </Link>
+              {bookLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  Loading...
+                </span>
+              ) : (
+                "Book Now!"
+              )}
+            </button>
           </div>
         </div>
       </div>

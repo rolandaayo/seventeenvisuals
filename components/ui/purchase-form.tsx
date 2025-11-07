@@ -10,9 +10,11 @@ import { usePaystack } from "@/hooks/usePaystack";
 export function PurchaseForm({
   presetName,
   price,
+  onSuccess,
 }: {
   presetName: string;
   price: number;
+  onSuccess?: () => void;
 }) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -37,6 +39,7 @@ export function PurchaseForm({
         toast.success(
           "Payment successful! Check your email for download instructions."
         );
+        onSuccess?.();
       },
       () => {
         if (error) {

@@ -19,9 +19,13 @@ type FormState = {
 };
 
 function apiBase() {
-  if (typeof window === "undefined") return "https://svntn-api.vercel.app";
-  if (window.location.hostname === "localhost") return "http://localhost:4000";
-  return "https://svntn-api.vercel.app"; // production API
+  // Always use hosted URL
+  return "https://svntn-api.vercel.app";
+
+  // Uncomment below for local development
+  // if (typeof window === "undefined") return "https://svntn-api.vercel.app";
+  // if (window.location.hostname === "localhost") return "http://localhost:4000";
+  // return "https://svntn-api.vercel.app";
 }
 
 function formatPrice(price: number): string {
@@ -187,50 +191,91 @@ export default function BookPage() {
       if (!paymentRes.ok) throw new Error("Payment initialization failed");
       const paymentData = await paymentRes.json();
 
-      // Open Paystack payment popup
-      const popup = window.open(
-        paymentData.authorization_url,
-        "Paystack Payment",
-        "width=600,height=700"
-      );
+      // Get Paystack public key
+      const configRes = await fetch(`${apiBase()}/api/payments/config`);
+      const config = await configRes.json();
 
-      // Poll for popup close
-      const pollTimer = setInterval(async () => {
-        if (popup?.closed) {
-          clearInterval(pollTimer);
+      console.log("Payment initialized:", paymentData);
+      console.log("Public key:", config.publicKey);
 
-          // Verify payment
-          const verifyRes = await fetch(
-            `${apiBase()}/api/payments/verify/${paymentData.reference}`
-          );
-
-          if (verifyRes.ok) {
-            const verifyData = await verifyRes.json();
-
-            if (verifyData.success) {
-              setSubmitted(true);
-              setFoundBooking(data);
-              setShowSuccessModal(true);
-
-              try {
-                toast({
-                  title: "Booking confirmed & Payment received",
-                  description: `ID: ${data.bookingId}`,
-                });
-              } catch (e) {
-                // swallow if toast system not available
-              }
-            } else {
-              setBookingError(
-                "Payment verification failed. Please contact support with booking ID: " +
-                  data.bookingId
-              );
-            }
+      // Load Paystack inline script if not already loaded
+      const loadPaystackScript = () => {
+        return new Promise<void>((resolve, reject) => {
+          // @ts-ignore
+          if (window.PaystackPop) {
+            resolve();
+            return;
           }
 
+          const existingScript = document.querySelector(
+            'script[src="https://js.paystack.co/v1/inline.js"]'
+          );
+          if (existingScript) {
+            existingScript.addEventListener("load", () => resolve());
+            return;
+          }
+
+          const script = document.createElement("script");
+          script.src = "https://js.paystack.co/v1/inline.js";
+          script.async = true;
+          script.onload = () => {
+            console.log("Paystack script loaded");
+            resolve();
+          };
+          script.onerror = () => reject(new Error("Failed to load Paystack"));
+          document.body.appendChild(script);
+        });
+      };
+
+      await loadPaystackScript();
+
+      // @ts-ignore
+      const handler = window.PaystackPop.setup({
+        key: config.publicKey,
+        email: form.email,
+        amount: amount * 100, // Convert to kobo
+        ref: paymentData.reference,
+        callback: function (response: any) {
+          console.log("Payment callback:", response);
+          // Payment successful - verify it (use non-async function)
+          fetch(`${apiBase()}/api/payments/verify/${response.reference}`)
+            .then((verifyRes) => verifyRes.json())
+            .then((verifyData) => {
+              if (verifyData.success) {
+                setSubmitted(true);
+                setFoundBooking(data);
+                setShowSuccessModal(true);
+
+                try {
+                  toast({
+                    title: "Booking confirmed & Payment received",
+                    description: `ID: ${data.bookingId}`,
+                  });
+                } catch (e) {
+                  // swallow if toast system not available
+                }
+              } else {
+                setBookingError(
+                  "Payment verification failed. Please contact support with booking ID: " +
+                    data.bookingId
+                );
+              }
+              setSubmitting(false);
+            })
+            .catch((err) => {
+              console.error("Verification error:", err);
+              setBookingError("Failed to verify payment");
+              setSubmitting(false);
+            });
+        },
+        onClose: function () {
+          console.log("Payment popup closed");
           setSubmitting(false);
-        }
-      }, 1000);
+        },
+      });
+
+      console.log("Opening Paystack popup...");
+      handler.openIframe();
     } catch (err) {
       console.error(err);
       setBookingError("Failed to process booking — please try again.");
@@ -569,19 +614,37 @@ export default function BookPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">
-                      Duration (minutes)
+                      Duration (hours)
                     </label>
                     <input
                       required
-                      type="number"
-                      min={15}
-                      step={5}
-                      value={form.minutes}
-                      onChange={(e) =>
-                        setForm({ ...form, minutes: Number(e.target.value) })
-                      }
-                      className="w-full rounded bg-black/50 px-3 py-2 outline-none border border-white/10"
+                      type="text"
+                      inputMode="numeric"
+                      value={form.minutes === 0 ? "" : form.minutes / 60}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === "") {
+                          setForm({ ...form, minutes: 0 });
+                        } else {
+                          const hours = parseFloat(value);
+                          if (!isNaN(hours) && hours >= 1) {
+                            setForm({
+                              ...form,
+                              minutes: Math.round(hours * 60),
+                            });
+                          }
+                        }
+                      }}
+                      onBlur={(e) => {
+                        const value = e.target.value;
+                        if (value === "" || parseFloat(value) < 1) {
+                          setForm({ ...form, minutes: 60 }); // Default to 1 hour
+                        }
+                      }}
+                      className="w-full rounded bg-white px-3 py-2 outline-none border"
+                      placeholder="1"
                     />
+                    <p className="text-xs text-black/60 mt-1">Minimum 1 hour</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">
@@ -589,14 +652,32 @@ export default function BookPage() {
                     </label>
                     <input
                       required
-                      type="number"
-                      min={1}
-                      value={form.outfits}
-                      onChange={(e) =>
-                        setForm({ ...form, outfits: Number(e.target.value) })
-                      }
-                      className="w-full rounded bg-black/50 px-3 py-2 outline-none border border-white/10"
+                      type="text"
+                      inputMode="numeric"
+                      value={form.outfits === 0 ? "" : form.outfits}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === "") {
+                          setForm({ ...form, outfits: 0 });
+                        } else {
+                          const num = parseInt(value, 10);
+                          if (!isNaN(num) && num >= 1) {
+                            setForm({ ...form, outfits: num });
+                          }
+                        }
+                      }}
+                      onBlur={(e) => {
+                        const value = e.target.value;
+                        if (value === "" || parseInt(value, 10) < 1) {
+                          setForm({ ...form, outfits: 1 }); // Default to 1
+                        }
+                      }}
+                      className="w-full rounded bg-white px-3 py-2 outline-none border"
+                      placeholder="1"
                     />
+                    <p className="text-xs text-black/60 mt-1">
+                      Minimum 1 outfit
+                    </p>
                   </div>
                   <div className="col-span-2 mt-3">
                     <label className="block text-sm font-medium mb-1">
@@ -607,7 +688,7 @@ export default function BookPage() {
                       onChange={(e) =>
                         setForm({ ...form, notes: e.target.value })
                       }
-                      className="w-full rounded bg-black/50 px-3 py-2 outline-none border border-white/10 h-24"
+                      className="w-full rounded bg-white px-3 py-2 outline-none border h-24"
                       placeholder="Anything you'd like to tell me? e.g., location, mood, references"
                     />
                   </div>
@@ -632,7 +713,13 @@ export default function BookPage() {
                     </div>
                     <div>
                       <dt className="font-medium">Duration</dt>
-                      <dd>{form.minutes} minutes</dd>
+                      <dd>
+                        {form.minutes >= 60
+                          ? `${(form.minutes / 60).toFixed(1)} hour${
+                              form.minutes / 60 !== 1 ? "s" : ""
+                            }`
+                          : `${form.minutes} minutes`}
+                      </dd>
                     </div>
                     <div>
                       <dt className="font-medium">Outfits</dt>
