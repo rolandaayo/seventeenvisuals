@@ -1,7 +1,7 @@
 
-# SEVENTEENVISUALS — Website
+# SEVENTEENVISUALS Website
 
-This is the codebase for Seventeen Visuals — a Next.js + Tailwind website showcasing photography/video color-presets, booking, and portfolio pages.
+This is the codebase for Seventeen Visuals a Next.js + Tailwind website showcasing photography/video color-presets, booking, and portfolio pages.
 
 ## Key features
 
@@ -13,9 +13,7 @@ This is the codebase for Seventeen Visuals — a Next.js + Tailwind website show
 
 ## Live demo
 
-If you've deployed this site, replace the link below with your production URL:
-
-[Live demo](#)
+[Live demo](https://seventeen-visuals.web.app/)
 
 ## Screenshot
 
